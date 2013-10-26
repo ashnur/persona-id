@@ -9,10 +9,10 @@ module.exports = function (opts) { return new Persona(opts) };
 
 function Persona (opts) {
     var self = this;
-    
+
     if (!opts) opts = { route: '/_persona' };
     if (typeof opts === 'string') opts = { route: opts };
-    
+
     self.routes = {};
     if (typeof opts.route === 'string') {
         self.routes.login = opts.route + '/login';
@@ -36,7 +36,6 @@ Persona.prototype.identify = function (opts) {
 
 Persona.prototype.unidentify = function () {
     navId.logout();
-    this._logout();
 };
 
 Persona.prototype._watch = function (user) {
@@ -51,7 +50,7 @@ Persona.prototype._watch = function (user) {
 Persona.prototype._login = function (assertion) {
     var self = this;
     var uri = self.routes.login;
-    
+
     var u = typeof uri === 'object' ? uri : url.parse(uri);
     var req = http.request({
         method: 'POST',
@@ -62,7 +61,7 @@ Persona.prototype._login = function (assertion) {
     req.on('response', function (res) {
         var body = '';
         res.on('data', function (buf) { body += buf });
-        
+
         if (!/^2\d\d\b/.test(res.statusCode)) {
             self.id = null;
             res.on('end', function () {
@@ -81,7 +80,7 @@ Persona.prototype._login = function (assertion) {
                         'unexpected response ' + typeof m
                     );
                 }
-                
+
                 if (m && m.cookie) {
                     for (var key in m.cookie) {
                         document.cookie = key + '=' + m.cookie[key];
@@ -101,7 +100,7 @@ Persona.prototype._logout = function () {
     var self = this;
     var uri = self.routes.logout;
     self.id = null;
-    
+
     var u = typeof uri === 'object' ? uri : url.parse(uri);
     var req = http.request({
         method: 'POST',
