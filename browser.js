@@ -25,8 +25,12 @@ inherits(Persona, EventEmitter);
 
 Persona.prototype.set = function (id) {
     this.id = id;
-    if (id) this.emit('login', id)
-    else this.emit('logout')
+    if (id) {
+        this._watch(id);
+        this.emit('login', id);
+    } else {
+        this.emit('logout');
+    }
 };
 
 Persona.prototype.identify = function (opts) {
